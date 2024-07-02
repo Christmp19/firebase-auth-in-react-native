@@ -14,8 +14,33 @@
     <td align="center">
       <img src="covers/cover4.jpg?raw=true" alt="Template Screenshot" width="200">
     </td>
+  </tr>
+   <tr>
     <td align="center">
       <img src="covers/cover5.jpg?raw=true" alt="Template Screenshot" width="200">
+    </td>
+    <td align="center">
+      <img src="covers/cover6.jpg?raw=true" alt="Template Screenshot" width="200">
+    </td>
+    <td align="center">
+      <img src="covers/cover7.jpg?raw=true" alt="Template Screenshot" width="200">
+    </td>
+    <td align="center">
+      <img src="covers/cover8.jpg?raw=true" alt="Template Screenshot" width="200">
+    </td>
+  </tr>
+   <tr>
+    <td align="center">
+      <img src="covers/cover9.jpg?raw=true" alt="Template Screenshot" width="200">
+    </td>
+    <td align="center">
+      <img src="covers/cover10.jpg?raw=true" alt="Template Screenshot" width="200">
+    </td>
+    <td align="center">
+      <img src="covers/cover11.jpg?raw=true" alt="Template Screenshot" width="200">
+    </td>
+    <td align="center">
+      <img src="covers/cover12.jpg?raw=true" alt="Template Screenshot" width="200">
     </td>
   </tr>
 </table>
