@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import '../nativewind.config';
+import React, { useState, useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignupScreen from '../screens/SignupScreen';
 import LoginScreen from '../screens/LoginScreen';

@@ -6,7 +6,8 @@ import {
   ScrollView,
   Text,
   SafeAreaView,
-  Pressable
+  Pressable,
+  Alert
 } from 'react-native'
 import React, { useContext, useState } from 'react';
 import FormInput from '../components/FormInput';
@@ -46,7 +47,7 @@ const LoginScreen = ({ navigation }) => {
 
       <FormButton
         buttonTitle="Sign In"
-        onPress={() => login(email, password)}
+        onPress={() => Alert.alert('Login Clicked!')}
       />
 
       <Pressable
@@ -60,7 +61,7 @@ const LoginScreen = ({ navigation }) => {
         btnType="facebook"
         color="#4867aa"
         backgroundColor="#e6eaf4"
-        onPress={() => fbLogin()}
+        onPress={() => Alert.alert('Facebook button pressed')}
       />
 
       <SocialButton
@@ -68,7 +69,7 @@ const LoginScreen = ({ navigation }) => {
         btnType="google"
         color="#de4d41"
         backgroundColor="#f5e7ea"
-        onPress={() => googleLogin()}
+        onPress={() => Alert.alert('Google button pressed')}
       />
 
       <Pressable

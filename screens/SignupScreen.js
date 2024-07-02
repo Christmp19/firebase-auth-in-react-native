@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   Text,
+  Alert,
   SafeAreaView,
   Pressable
 } from 'react-native'
@@ -51,7 +52,7 @@ const SignupScreen = ({ navigation }) => {
 
       <FormButton
         buttonTitle="Sign Up"
-        onPress={() => login(email, password)}
+        onPress={() => Alert.alert('Sign Up Clicked!')}
       />
 
       <View style={styles.textPrivate}>
@@ -74,7 +75,7 @@ const SignupScreen = ({ navigation }) => {
         btnType="facebook"
         color="#4867aa"
         backgroundColor="#e6eaf4"
-        onPress={() => fbLogin()}
+        onPress={() => Alert.alert('Facebook Login Clicked!')}
       />
 
       <SocialButton
@@ -82,7 +83,7 @@ const SignupScreen = ({ navigation }) => {
         btnType="google"
         color="#de4d41"
         backgroundColor="#f5e7ea"
-        onPress={() => googleLogin()}
+        onPress={() => Alert.alert('Google Sign In Clicked!')}
       />
 
       <Pressable
