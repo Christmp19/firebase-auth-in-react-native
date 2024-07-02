@@ -1,27 +1,55 @@
-import {
-  View,
-  Platform,
-  StyleSheet,
-  ScrollView,
-  Text,
-  Alert,
-  SafeAreaView,
-  Pressable
-} from 'react-native'
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Alert, Pressable, ActivityIndicator } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import SocialButton from '../components/SocialButton';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebaseConfig'; // Importez l'authentification configurée
 
 const SignupScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false); // State pour gérer le chargement
 
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
-  
+  const handleSignUp = () => {
+    if (password !== confirmPassword) {
+      Alert.alert("Passwords do not match!");
+      return;
+    }
+
+    setLoading(true); // Activer le chargement pendant le processus
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        setLoading(false); // Désactiver le chargement après la création de compte réussie
+        Alert.alert("Account created successfully!");
+        navigation.replace('Home'); // Redirection après création de compte réussie
+      })
+      .catch((error) => {
+        setLoading(false); // Désactiver le chargement en cas d'erreur
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        switch (errorCode) {
+          case 'auth/email-already-in-use':
+            Alert.alert("Email Already in Use", "This email address is already registered.");
+            break;
+          case 'auth/invalid-email':
+            Alert.alert("Invalid Email", "The email address is not valid.");
+            break;
+          case 'auth/weak-password':
+            Alert.alert("Weak Password", "The password should be at least 6 characters long.");
+            break;
+          default:
+            Alert.alert("Sign Up Error", errorMessage);
+            break;
+        }
+      });
+  };
 
   return (
-    <View className='flex-1 justify-center items-center p-7 pt-10'>
+    <View style={styles.container}>
       <Text style={styles.text}>Create an account</Text>
 
       <FormInput
@@ -44,7 +72,7 @@ const SignupScreen = ({ navigation }) => {
 
       <FormInput
         labelValue={confirmPassword}
-        onChangeText={(userPassword) => setPassword(userPassword)}
+        onChangeText={(userPassword) => setConfirmPassword(userPassword)}
         placeholderText="Confirm Password"
         iconType="lock"
         secureTextEntry={true}
@@ -52,8 +80,12 @@ const SignupScreen = ({ navigation }) => {
 
       <FormButton
         buttonTitle="Sign Up"
-        onPress={() => Alert.alert('Sign Up Clicked!')}
+        onPress={handleSignUp}
       />
+
+      <Text style={{ marginTop: 20, marginBottom: 20 }}>
+        {loading && <ActivityIndicator size="large" />}
+      </Text>
 
       <View style={styles.textPrivate}>
         <Text style={styles.color_textPrivate}>
@@ -92,33 +124,22 @@ const SignupScreen = ({ navigation }) => {
         <Text style={styles.navButtonText}>Have an account? Sign In</Text>
       </Pressable>
     </View>
-  )
-}
-
-export default SignupScreen
-
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
+    flex: 1,
     alignItems: 'center',
     padding: 20,
-    paddingTop: 50
+    paddingTop: 50,
   },
   text: {
     fontFamily: 'Kufam-SemiBoldItalic',
     fontSize: 28,
     marginBottom: 10,
     color: '#051d5f',
-  },
-  navButton: {
-    marginTop: 20,
-  },
-  navButtonText: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#2e64e5',
-    fontFamily: 'Lato-Regular',
   },
   textPrivate: {
     flexDirection: 'row',
@@ -132,4 +153,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Regular',
     color: 'grey',
   },
+  navButton: {
+    marginTop: 15,
+  },
+  navButtonText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#2e64e5',
+    fontFamily: 'Lato-Regular',
+  },
 });
+
+export default SignupScreen;

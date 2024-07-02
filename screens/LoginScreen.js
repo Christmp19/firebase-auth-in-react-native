@@ -1,30 +1,43 @@
-import {
-  View,
-  Image,
-  Platform,
-  StyleSheet,
-  ScrollView,
-  Text,
-  SafeAreaView,
-  Pressable,
-  Alert
-} from 'react-native'
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, Text, Pressable, Alert, ActivityIndicator } from 'react-native';
 import FormInput from '../components/FormInput';
 import FormButton from '../components/FormButton';
 import SocialButton from '../components/SocialButton';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation, handleLogin }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // State pour gérer le chargement
 
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const onLoginPress = async () => {
+    try {
+      setLoading(true); // Activer le chargement pendant le processus de connexion
+      await handleLogin(email, password);
+      setLoading(false); // Désactiver le chargement après la connexion réussie
+      Alert.alert("Login in successfully!");
+      navigation.replace('Home'); // Redirection après connexion réussie
+    } catch (error) {
+      setLoading(false); // Désactiver le chargement en cas d'erreur
+      switch (error.code) {
+        case 'auth/wrong-password':
+          Alert.alert('Incorrect Password', 'The password you entered is incorrect.');
+          break;
+        case 'auth/user-not-found':
+          Alert.alert('User Not Found', 'There is no user corresponding to the given email.');
+          break;
+        case 'auth/invalid-email':
+          Alert.alert('Invalid Email', 'The email address is not valid.');
+          break;
+        default:
+          Alert.alert('Login Error', error.message);
+          break;
+      }
+    }
+  };
 
   return (
-    <View className='flex-1 justify-center items-center p-7 pt-10'>
-      <Image
-        source={require('../assets/rn-social-logo.png')}
-        style={styles.logo}
-      />
+    <View style={styles.container}>
+      <Image source={require('../assets/rn-social-logo.png')} style={styles.logo} />
       <Text style={styles.text}>RN Social App</Text>
 
       <FormInput
@@ -47,12 +60,14 @@ const LoginScreen = ({ navigation }) => {
 
       <FormButton
         buttonTitle="Sign In"
-        onPress={() => Alert.alert('Login Clicked!')}
+        onPress={onLoginPress}
       />
 
-      <Pressable
-        style={styles.forgotButton} onPress={() => { }}
-      >
+      <Text style={{ marginTop: 20, marginBottom: 20 }}>
+        {loading && <ActivityIndicator size="large" />}
+      </Text>
+      
+      <Pressable style={styles.forgotButton} onPress={() => { }}>
         <Text style={styles.navButtonText}>Forgot Password?</Text>
       </Pressable>
 
@@ -72,19 +87,14 @@ const LoginScreen = ({ navigation }) => {
         onPress={() => Alert.alert('Google button pressed')}
       />
 
-      <Pressable
-        style={styles.forgotButton}
-        onPress={() => navigation.replace('Signup')}>
+      <Pressable style={styles.forgotButton} onPress={() => navigation.replace('Signup')}>
         <Text style={styles.navButtonText}>
-          Don't have an acount? Create here
+          Don't have an account? Create here
         </Text>
       </Pressable>
     </View>
-  )
-}
-
-export default LoginScreen
-
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -92,7 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     padding: 20,
-    paddingTop: 50
+    paddingTop: 50,
   },
   logo: {
     height: 150,
@@ -105,9 +115,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: '#051d5f',
   },
-  navButton: {
-    marginTop: 15,
-  },
   forgotButton: {
     marginVertical: 35,
   },
@@ -118,3 +125,5 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Regular',
   },
 });
+
+export default LoginScreen;
